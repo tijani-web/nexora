@@ -1,5 +1,5 @@
 // lib/api.ts
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
@@ -46,7 +46,7 @@ async function apiClient<T = any>(endpoint: string, options: ApiOptions = {}): P
     }
 
     const data = await response.json()
-    console.log('✅ API Response Data:', data)
+    // console.log('✅ API Response Data:', data)
     return data
   } catch (error: any) {
     console.error('❌ API Call Failed:', error)
