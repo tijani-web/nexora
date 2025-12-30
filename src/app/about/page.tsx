@@ -77,7 +77,7 @@ export default function AboutPage() {
         <Badge variant="secondary" className="mb-6 text-sm">
           About Nexora
         </Badge>
-        <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Welcome to Nexora
         </h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">

@@ -130,7 +130,7 @@ const LANGUAGES = [
 export default function SettingsPage() {
   const router = useRouter()
   const { theme, toggleTheme } = useTheme()
-  const [currentTheme, setCurrentTheme] = useState(theme)
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(theme)
   const [currentLanguage, setCurrentLanguage] = useState('en')
 
   // Get texts for current language
@@ -152,6 +152,7 @@ export default function SettingsPage() {
   }, [theme])
 
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+    setCurrentTheme(newTheme)
     if (newTheme === 'system') {
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
       const actualTheme = systemPrefersDark ? 'dark' : 'light'

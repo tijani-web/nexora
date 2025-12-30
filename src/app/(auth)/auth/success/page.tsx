@@ -21,6 +21,7 @@ interface FrontendUser {
   username: string
   email: string
   avatar_url?: string
+  created_at: string
 }
 
 export default function AuthSuccessPage() {
@@ -49,10 +50,11 @@ export default function AuthSuccessPage() {
         username: backendUser.name,
         email: backendUser.email,
         avatar_url: backendUser.avatar_url || undefined,
+       created_at: backendUser.created_at
       }
 
       login(frontendUser, token)
-      setHandled(true) // ✅ mark as done before redirect
+      setHandled(true) // mark as done before redirect
       router.replace('/')
     } catch (error) {
       console.error('AuthSuccess parsing error:', error)

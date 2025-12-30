@@ -746,7 +746,7 @@ console.log("Hello World!");
                       />
                       <Button
                         type="button"
-                        variant="destructive"
+                        variant="default"
                         size="sm"
                         onClick={removeImage}
                         className="absolute top-2 lg:top-4 right-2 lg:right-4 bg-red-500/90 hover:bg-red-600 backdrop-blur-sm border-0 shadow-lg hover:scale-110 transition-all h-8 w-8 lg:h-10 lg:w-10"
