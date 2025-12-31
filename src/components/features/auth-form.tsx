@@ -73,9 +73,9 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   const handleOAuth = (provider: 'github' | 'google') => {
     if (provider === 'github') {
-      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/oauth/github`
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth/github`
     } else {
-      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/oauth/google`
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth/google`
     }
   }
 
