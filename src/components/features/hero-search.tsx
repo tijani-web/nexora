@@ -210,15 +210,15 @@ export function HeroSearch() {
   }
 
   return (
-    <div className="text-center py-12 px-6 border-b border-border relative">
-      <h1 className="text-4xl font-bold text-foreground mb-4">
+    <div className="text-center py-6 sm:py-8 md:py-12 px-3 sm:px-4 md:px-6 border-b border-border relative">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4 px-2">
         Ask, Learn, Share
       </h1>
       
       {/* Search Bar */}
-      <div className="max-w-2xl mx-auto relative" ref={searchRef}>
+      <div className="max-w-2xl mx-auto relative px-2" ref={searchRef}>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
           <input
             ref={inputRef}
             type="text"
@@ -226,24 +226,24 @@ export function HeroSearch() {
             onChange={(e) => handleSearch(e.target.value)}
             onFocus={() => query.trim() && setShowResults(true)}
             placeholder="Search questions, answers, users, tags..."
-            className="w-full pl-10 pr-10 py-3 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-foreground"
+            className="w-full pl-9 sm:pl-10 pr-8 sm:pr-10 py-2 sm:py-3 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-foreground text-sm sm:text-base"
           />
           {query && (
             <button
               onClick={clearSearch}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-1"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3 w-3 sm:h-4 sm:w-4" />
             </button>
           )}
         </div>
         
         {/* Search Results Dropdown */}
         {showResults && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-1 sm:mt-2 bg-card border border-border rounded-lg shadow-lg z-50 max-h-80 sm:max-h-96 overflow-y-auto">
             {/* Filter Tabs */}
             {!loading && results.length > 0 && (
-              <div className="flex border-b border-border">
+              <div className="flex border-b border-border overflow-x-auto">
                 {filterTabs.map((tab) => (
                   <button
                     key={tab.key}
@@ -251,14 +251,14 @@ export function HeroSearch() {
                       setActiveFilter(tab.key)
                       setSelectedIndex(-1)
                     }}
-                    className={`flex items-center gap-1 px-3 py-2 text-xs font-medium border-b-2 transition-colors ${
+                    className={`flex items-center gap-1 px-2 py-2 sm:px-3 text-xs font-medium border-b-2 transition-colors flex-shrink-0 ${
                       activeFilter === tab.key
                         ? 'border-blue-500 text-blue-600 bg-blue-50 dark:bg-blue-950'
                         : 'border-transparent text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     <tab.icon className="h-3 w-3" />
-                    {tab.label}
+                    <span className="hidden xs:inline">{tab.label}</span>
                     {tab.count > 0 && (
                       <span className="bg-muted px-1 rounded text-xs">
                         {tab.count}
@@ -271,24 +271,24 @@ export function HeroSearch() {
             
             {/* Loading State */}
             {loading && (
-              <div className="p-4 text-center text-muted-foreground">
+              <div className="p-3 sm:p-4 text-center text-muted-foreground">
                 <div className="flex items-center justify-center gap-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
-                  🔍 Searching...
+                  <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-blue-500"></div>
+                  <span className="text-xs sm:text-sm">Searching...</span>
                 </div>
               </div>
             )}
             
             {/* Error State */}
             {error && (
-              <div className="p-4 text-center text-destructive">
+              <div className="p-3 sm:p-4 text-center text-destructive text-xs sm:text-sm">
                 ❌ {error}
               </div>
             )}
             
             {/* Results */}
             {!loading && !error && filteredResults.length > 0 && (
-              <div className="py-2">
+              <div className="py-1 sm:py-2">
                 {filteredResults.map((result, index) => {
                   const display = getResultDisplay(result)
                   const isSelected = index === selectedIndex
@@ -299,27 +299,27 @@ export function HeroSearch() {
                       href={getResultUrl(result)}
                       onClick={() => handleResultClick(result)}
                     >
-                      <div className={`flex items-start gap-3 px-4 py-3 cursor-pointer border-b border-border last:border-b-0 transition-colors ${
+                      <div className={`flex items-start gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 cursor-pointer border-b border-border last:border-b-0 transition-colors ${
                         isSelected ? 'bg-accent' : 'hover:bg-accent'
                       }`}>
-                        <div className="mt-1">
+                        <div className="mt-0.5 sm:mt-1">
                           {getResultIcon(result.type)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground text-sm mb-1 line-clamp-1">
+                          <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5 sm:mb-1 line-clamp-1">
                             {highlightText(display.title, query)}
                           </h3>
                           {display.subtitle && (
-                            <p className="text-muted-foreground text-xs line-clamp-2 mb-1">
+                            <p className="text-muted-foreground text-xs line-clamp-1 sm:line-clamp-2 mb-0.5 sm:mb-1">
                               {highlightText(display.subtitle, query)}
                             </p>
                           )}
-                          <div className="text-xs text-muted-foreground">
+                          <div className="text-xs text-muted-foreground line-clamp-1">
                             {display.meta}
                           </div>
                         </div>
                         {isSelected && (
-                          <ArrowUp className="h-4 w-4 text-blue-500" />
+                          <ArrowUp className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
                         )}
                       </div>
                     </Link>
@@ -330,27 +330,27 @@ export function HeroSearch() {
             
             {/* Empty States */}
             {!loading && !error && filteredResults.length === 0 && (
-              <div className="p-6 text-center">
+              <div className="p-4 sm:p-6 text-center">
                 {query ? (
                   // No results for query
                   <div className="text-muted-foreground">
-                    <p className="mb-2">No {activeFilter !== 'all' ? activeFilter : ''} results found for "{query}"</p>
-                    <p className="text-xs">Try different keywords or browse all content</p>
+                    <p className="mb-1 sm:mb-2 text-sm">No {activeFilter !== 'all' ? activeFilter : ''} results found for "{query}"</p>
+                    <p className="text-xs">Try different keywords</p>
                   </div>
                 ) : (
                   // Recent searches
                   recentSearches.length > 0 ? (
                     <div>
-                      <h4 className="text-sm font-semibold mb-3 flex items-center justify-center gap-2">
-                        <Clock className="h-4 w-4" />
+                      <h4 className="text-xs sm:text-sm font-semibold mb-2 sm:mb-3 flex items-center justify-center gap-1 sm:gap-2">
+                        <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                         Recent Searches
                       </h4>
-                      <div className="space-y-2">
+                      <div className="space-y-1 sm:space-y-2">
                         {recentSearches.map((searchTerm, index) => (
                           <button
                             key={index}
                             onClick={() => handleExampleClick(searchTerm)}
-                            className="w-full text-left px-3 py-2 text-sm rounded hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
+                            className="w-full text-left px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm rounded hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
                           >
                             {searchTerm}
                           </button>
@@ -359,8 +359,8 @@ export function HeroSearch() {
                     </div>
                   ) : (
                     // No recent searches
-                    <div className="text-muted-foreground">
-                      <p>Start typing to search questions, answers, users, and tags</p>
+                    <div className="text-muted-foreground text-sm">
+                      <p>Start typing to search</p>
                     </div>
                   )
                 )}
@@ -370,10 +370,10 @@ export function HeroSearch() {
         )}
         
         {/* Example Searches */}
-        <div className="flex flex-wrap justify-center gap-3 mt-4">
+        <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 md:gap-3 mt-3 sm:mt-4">
           {[
-            "React hooks tutorial",
-            "Python data analysis",
+            "React hooks",
+            "Python data",
             "@username",
             "#javascript"
           ].map((example) => (
@@ -381,7 +381,7 @@ export function HeroSearch() {
               key={example}
               variant="outline"
               size="sm"
-              className="text-xs text-muted-foreground hover:text-foreground"
+              className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 h-7"
               onClick={() => handleExampleClick(example)}
             >
               {example}
@@ -389,10 +389,10 @@ export function HeroSearch() {
           ))}
         </div>
 
-        {/* Keyboard Shortcuts Hint */}
-        <div className="text-xs text-muted-foreground mt-3 flex justify-center gap-4">
-          <span>↑↓ Navigate</span>
-          <span>Enter Select</span>
+        {/* Keyboard Shortcuts Hint - Hide on very small screens */}
+        <div className="text-xs text-muted-foreground mt-2 sm:mt-3 flex justify-center gap-2 sm:gap-4">
+          <span className=" xs:inline">↑↓ Navigate</span>
+          <span className=" xs:inline">Enter Select</span>
           <span>Esc Close</span>
         </div>
       </div>

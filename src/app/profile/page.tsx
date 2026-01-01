@@ -34,35 +34,43 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user?.id) return
-      
-      try {
-        setLoading(true)
-        setError(null)
+useEffect(() => {
+  const fetchUserData = async () => {
+    if (!user?.id) return
+    
+    try {
+      setLoading(true)
+      setError(null)
 
-        const [stats, questions, answers, activities] = await Promise.all([
-          usersApi.getUserStats(user.id),
-          usersApi.getUserQuestions(user.id),
-          usersApi.getUserAnswers(user.id),
-          activitiesApi.getUserActivities(user.id, { limit: 20, offset: 0 })
-        ])
+      // console.log('🔍 Fetching profile data for user:', user.id);
 
-        setUserStats(stats)
-        setUserQuestions(questions)
-        setUserAnswers(answers)
-        setUserActivities(activities.data || [])
-      } catch (err) {
-        setError('Failed to load profile data')
-        console.error('Error fetching user data:', err)
-      } finally {
-        setLoading(false)
-      }
+      // Fetch all data in parallel
+      const [stats, questions, answers, activities] = await Promise.all([
+        usersApi.getUserStats(user.id),
+        usersApi.getUserQuestions(user.id),
+        usersApi.getUserAnswers(user.id),
+        activitiesApi.getUserActivities(user.id, { limit: 20, offset: 0 })
+      ])
+
+      // console.log(' User Stats Response:', stats);
+      // console.log(' User Questions Response:', questions);
+      // console.log(' User Answers Response:', answers);
+      // console.log(' User Activities Response:', activities);
+
+      setUserStats(stats)
+      setUserQuestions(questions)
+      setUserAnswers(answers)
+      setUserActivities(activities.data || [])
+    } catch (err) {
+      console.error('❌ Error fetching user data:', err);
+      setError('Failed to load profile data')
+    } finally {
+      setLoading(false)
     }
+  }
 
-    fetchUserData()
-  }, [user])
+  fetchUserData()
+}, [user])
 
   if (!user) {
     return (

@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useParams } from 'next/navigation'
@@ -12,7 +11,6 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-
 
 interface Answer {
   id: string
@@ -30,7 +28,6 @@ interface Answer {
   avatar_url?: string | null
 }
 
-
 // AI Summary Interface
 interface AISummary {
   id: string
@@ -39,7 +36,6 @@ interface AISummary {
   model_info: string
   created_at: string
 }
-
 
 // Avatar Component
 const Avatar = ({ name, image }: { name: string; image?: string | null }) => {
@@ -121,9 +117,6 @@ export default function QuestionDetailPage() {
   const [editText, setEditText] = useState('')
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
-
-
-  // AI Features State
   const [aiSummary, setAiSummary] = useState<AISummary | null>(null)
   const [aiLoading, setAiLoading] = useState(false)
   const [aiError, setAiError] = useState<string | null>(null)
@@ -138,7 +131,6 @@ export default function QuestionDetailPage() {
     setTimeout(() => setToast(null), 3000)
   }
   
-
   // TIME FORMATTING
   const formatTime = (dateString: string) => {
     const date = new Date(dateString)
@@ -161,8 +153,12 @@ export default function QuestionDetailPage() {
     })
   }
 
+  // Truncate text for small screens
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text
+    return text.slice(0, maxLength) + '...'
+  }
 
-    // Markdown Components for rich rendering
   const MarkdownComponents = {
     code({ node, inline, className, children, ...props }: any) {
       const match = /language-(\w+)/.exec(className || '')
@@ -209,8 +205,7 @@ export default function QuestionDetailPage() {
     em: ({ children }: any) => <em className="italic text-foreground">{children}</em>,
   }
 
-
-   useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true)
@@ -219,7 +214,6 @@ export default function QuestionDetailPage() {
           answersApi.getByQuestion(id)
         ])
         
-        // Fetch votes for each answer (keep your existing logic)
         const answersWithVotes = await Promise.all(
           answersData.map(async (answer: any) => {
             try {
@@ -245,7 +239,6 @@ export default function QuestionDetailPage() {
           })
         )
 
-        // Sort answers (keep your existing logic)
         const sortedAnswers = [...answersWithVotes].sort((a, b) => {
           if (a.is_accepted && !b.is_accepted) return -1
           if (!a.is_accepted && b.is_accepted) return 1
@@ -273,7 +266,6 @@ export default function QuestionDetailPage() {
     if (id) fetchData()
   }, [id, user])
 
-
   const handleSubmitAnswer = async () => {
     if (!user) {
       setSubmitError('Please log in to post an answer')
@@ -291,14 +283,13 @@ export default function QuestionDetailPage() {
 
       const newAnswer = await answersApi.create(id, answerText)
 
-      // ✅ FIXED: Set updated_at same as created_at for new answers
       const optimisticAnswer: Answer = {
         id: newAnswer.id,
         body: answerText,
         user_id: user.id,
         question_id: id,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(), // Same as created_at
+        updated_at: new Date().toISOString(),
         is_accepted: false,
         author_name: user.username || 'User',
         votes_count: 0,
@@ -308,7 +299,6 @@ export default function QuestionDetailPage() {
         avatar_url: user.avatar_url || null
       }
 
-      // Add new answer and re-sort
       setAnswers(prev => {
         const newAnswers = [...prev, optimisticAnswer]
         return newAnswers.sort((a, b) => {
@@ -330,7 +320,6 @@ export default function QuestionDetailPage() {
       setAnswerText('')
       showToast('Answer posted successfully!', 'success')
 
-      // Update question answer count
       setQuestion(prev => {
         if (!prev) return prev
         const currentCount = Number(prev.answers_count) || 0
@@ -361,7 +350,6 @@ export default function QuestionDetailPage() {
 
       const currentVote = answer.user_vote
       
-      // Optimistic update
       setAnswers(prev => prev.map(a => {
         if (a.id !== answerId) return a
 
@@ -370,18 +358,15 @@ export default function QuestionDetailPage() {
         let newUserVote: 'upvote' | 'downvote' | null = voteType
 
         if (currentVote === voteType) {
-          // Remove vote
           newUserVote = null
           if (voteType === 'upvote') newUpvotes -= 1
           if (voteType === 'downvote') newDownvotes -= 1
         } else if (currentVote && currentVote !== voteType) {
-          // Change vote
           if (currentVote === 'upvote') newUpvotes -= 1
           if (currentVote === 'downvote') newDownvotes -= 1
           if (voteType === 'upvote') newUpvotes += 1
           if (voteType === 'downvote') newDownvotes += 1
         } else {
-          // New vote
           if (voteType === 'upvote') newUpvotes += 1
           if (voteType === 'downvote') newDownvotes += 1
         }
@@ -397,7 +382,6 @@ export default function QuestionDetailPage() {
         }
       }))
 
-      // API call
       if (currentVote === voteType) {
         await votesApi.deleteVote(answerId)
       } else {
@@ -409,7 +393,6 @@ export default function QuestionDetailPage() {
       setSubmitError(errorMessage)
       showToast(errorMessage, 'error')
       
-      // Refresh on error
       const answersData = await answersApi.getByQuestion(id)
       setAnswers(answersData)
     }
@@ -449,7 +432,6 @@ export default function QuestionDetailPage() {
       setDeleteConfirmId(null)
       showToast('Answer deleted successfully!', 'success')
       
-      // Update question answer count
       setQuestion(prev => {
         if (!prev) return prev
         const currentCount = Number(prev.answers_count) || 0
@@ -466,14 +448,12 @@ export default function QuestionDetailPage() {
     }
   }
 
- // Accept answer
-const handleAcceptAnswer = async (answerId: string) => {
+ const handleAcceptAnswer = async (answerId: string) => {
   if (!user || !question || question.author_id !== user.id) return
   
   try {
     await answersApi.accept(answerId)
     
-    // Update local state
     setAnswers(prev => prev.map(a => ({
       ...a,
       is_accepted: a.id === answerId
@@ -488,104 +468,7 @@ const handleAcceptAnswer = async (answerId: string) => {
   }
 }
 
-  // Generate AI Summary
-const generateAISummary = async () => {
-  if (!user) {
-    showToast('Please log in to generate AI summary', 'error')
-    return
-  }
-
-  try {
-    setGeneratingSummary(true)
-    setAiError(null)
-    setShowAIFeatures(true)
-    
-    console.log('🔄 Starting AI generation for question:', question!.id)
-    
-    // Test each API call individually
-    console.log('📝 Testing quickSummary API...')
-    const summaryResponse = await aiApi.quickSummary(question!.body, question!.id)
-    console.log('📝 quickSummary RAW RESPONSE:', summaryResponse)
-    
-    if (summaryResponse.success) {
-      console.log('✅ quickSummary SUCCESS:', summaryResponse.data)
-      setAiSummary({
-        id: 'temp',
-        question_id: question!.id,
-        summary: summaryResponse.data,
-        model_info: 'Gemini 2.5 Flash',
-        created_at: new Date().toISOString()
-      })
-    } else {
-      console.log('❌ quickSummary FAILED:', summaryResponse.message)
-      throw new Error(summaryResponse.message || 'Quick summary failed')
-    }
-
-    console.log('🏷️ Testing detectContentType API...')
-    const typeResponse = await aiApi.detectContentType(question!.title + ' ' + question!.body, question!.id)
-    console.log('🏷️ detectContentType RAW RESPONSE:', typeResponse)
-    
-    if (typeResponse.success) {
-      console.log('✅ detectContentType SUCCESS:', typeResponse.data)
-      setContentType(typeResponse.data)
-    } else {
-      console.log('❌ detectContentType FAILED:', typeResponse.message)
-      // Don't throw error here - continue with other calls
-    }
-
-    console.log('🔍 Testing detectDuplicates API...')
-    const similarResponse = await aiApi.detectDuplicates(question!.title, question!.id)
-    console.log('🔍 detectDuplicates RAW RESPONSE:', similarResponse)
-    
-    if (similarResponse.success && similarResponse.data) {
-      console.log('✅ detectDuplicates SUCCESS:', similarResponse.data)
-      const similar = similarResponse.data.split('\n').filter((q: string) => q.trim().length > 0)
-      setSimilarQuestions(similar.slice(0, 3))
-    } else {
-      console.log('❌ detectDuplicates FAILED:', similarResponse.message)
-      // Don't throw error here - continue
-    }
-
-    showToast('AI insights generated successfully!', 'success')
-    console.log('🎉 ALL AI generation completed!')
-    
-  } catch (err: any) {
-    console.error('💥 AI generation CRASHED:', err)
-    console.error('💥 Error details:', err.response || err.message || err)
-    setAiError(err.message || 'Failed to generate AI insights')
-    showToast('Failed to generate AI insights', 'error')
-  } finally {
-    setGeneratingSummary(false)
-  }
-}
-
-// fetch AI summary
-  useEffect(() => {
-    const fetchAISummary = async (questionId: string) => {
-      try {
-        setAiLoading(true)
-        setAiError(null)
-        const summary = await aiApi.quickSummary(questionId)
-        setAiSummary(summary.data)
-        setAiError(null)
-      } catch (err: any) {
-        if (!err.message.includes('No AI summary found') && !err.message.includes('404')) {
-          setAiError(err.message || 'Failed to fetch AI summary')
-        }
-        setAiSummary(null)
-      } finally {
-        setAiLoading(false)
-      }
-    }
-
-    if (id) {
-      fetchAISummary(id)
-    }
-  }, [id])
-
-
-
- const AnswerItem = ({ answer }: { answer: Answer }) => {
+const AnswerItem = ({ answer }: { answer: Answer }) => {
   const isOwner = user?.id === answer.user_id
   const isQuestionOwner = user?.id === question?.author_id
   const wasEdited = answer.updated_at && answer.updated_at !== answer.created_at
@@ -598,37 +481,37 @@ const generateAISummary = async () => {
           : 'bg-card'
       }`}
     >
-      {/* Answer Header - Like social media post header */}
+      {/* Answer Header */}
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <Avatar name={answer.author_name} image={answer.avatar_url} />
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-foreground text-sm">
-                {answer.author_name}
+              <span className="font-semibold text-foreground text-sm truncate">
+                {truncateText(answer.author_name, 20)}
               </span>
               {isOwner && (
-                <span className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded-full">
+                <span className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">
                   You
                 </span>
               )}
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>{formatTime(answer.created_at)}</span>
-              {wasEdited && <span className="italic">(edited)</span>}
+              {wasEdited && <span className="italic hidden sm:inline">(edited)</span>}
               {answer.is_accepted && (
                 <span className="flex items-center gap-1 text-green-600 font-medium">
                   <Check className="h-3 w-3" />
-                  Accepted
+                  <span className="hidden sm:inline">Accepted</span>
+                  <span className="sm:hidden">✓</span>
                 </span>
               )}
             </div>
           </div>
         </div>
 
-        {/* Action buttons - always visible for owners */}
-        <div className="flex items-center gap-1">
-          {/* Accept Answer button for question owner */}
+        {/* Action buttons */}
+        <div className="flex items-center gap-1 flex-shrink-0">
           {isQuestionOwner && !answer.is_accepted && (
             <button
               onClick={() => handleAcceptAnswer(answer.id)}
@@ -639,7 +522,6 @@ const generateAISummary = async () => {
             </button>
           )}
           
-          {/* Edit/Delete buttons for answer owner */}
           {isOwner && (
             <>
               <button
@@ -702,7 +584,7 @@ const generateAISummary = async () => {
             </ReactMarkdown>
           </div>
           
-          {/* Voting and stats - at the bottom like social media */}
+          {/* Voting and stats */}
           <div className="flex items-center justify-between pt-3 border-t border-border/50">
             <div className="flex items-center gap-4">
               {/* Upvote button */}
@@ -731,9 +613,10 @@ const generateAISummary = async () => {
                 <span className="text-sm font-medium">{answer.downvotes}</span>
               </button>
               
-              {/* Total votes */}
+              {/* Total votes - hide "votes" word on small screens */}
               <span className="text-sm text-muted-foreground font-medium">
-                {answer.votes_count} votes
+                {answer.votes_count}
+                <span className="hidden sm:inline"> votes</span>
               </span>
             </div>
           </div>
@@ -814,20 +697,26 @@ return (
       )}
 
       {/* Question Metadata */}
-      <div className="flex items-center gap-3 text-sm text-muted-foreground pt-4 border-t border-border/50">
+      <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground pt-4 border-t border-border/50">
         <Avatar name={question.author_name} image={question.avatar_url} />
-        <span className="font-semibold text-foreground">{question.author_name}</span>
+        <span className="font-semibold text-foreground truncate max-w-[120px] sm:max-w-none">
+          {question.author_name}
+        </span>
         {user?.id === question.author_id && (
-          <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">
+          <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full whitespace-nowrap">
             You
           </span>
         )}
-        <span>•</span>
+        <span className="hidden sm:inline">•</span>
         <span>{formatTime(question.created_at)}</span>
-        <span>•</span>
+        <span className="hidden sm:inline">•</span>
         <span className="flex items-center gap-1">
           <Eye className="h-4 w-4" />
-          {question.views_count} views
+          <span>
+            {question.views_count}
+            {/* Hide "views" word on screens below 460px */}
+            <span className="hidden sm:inline"> views</span>
+          </span>
         </span>
       </div>
     </div>

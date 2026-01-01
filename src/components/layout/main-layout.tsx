@@ -75,7 +75,7 @@ export default function MainLayout({
       )}
 
       {/* Mobile Bottom Navigation - Only show on mobile (640px and below) */}
-      {isMobile && <MobileBottomNav />}
+      {(isMobile) && <MobileBottomNav />}
     </div>
   )
 }

@@ -11,7 +11,7 @@ interface ApiOptions extends RequestInit {
 async function apiClient<T = any>(endpoint: string, options: ApiOptions = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`
 
-  console.log('🔄 API Call:', url, options)
+  // console.log('🔄 API Call:', url, options)
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
 
@@ -32,7 +32,7 @@ async function apiClient<T = any>(endpoint: string, options: ApiOptions = {}): P
     const response = await fetch(url, config)
     console.log('📡 API Response Status:', response.status)
 
-    // 🔥 FIX: Only handle redirect if we're in the browser
+    //  Only handle redirect if we're in the browser
     if (response.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('token')
       localStorage.removeItem('user')

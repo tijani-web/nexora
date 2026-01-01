@@ -187,7 +187,7 @@ export function LeftSidebar({ collapsed, onToggle }: LeftSidebarProps) {
                 <img src={user.avatar_url} alt={user.username} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-white text-sm font-medium">
-                  {user.username[0].toUpperCase()}
+                  {user.username[0].toUpperCase() || 'U'}
                 </span>
               )}
             </div>

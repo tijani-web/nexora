@@ -30,7 +30,7 @@ const MarkdownComponents = {
           style={oneDark}
           language={language}
           PreTag="div"
-          className="rounded-lg border border-border text-sm"
+          className="rounded-lg border border-border text-xs sm:text-sm"
           {...props}
         >
           {String(children).replace(/\n$/, '')}
@@ -39,7 +39,7 @@ const MarkdownComponents = {
     }
 
     return (
-      <code className="bg-muted px-1.5 py-0.5 rounded text-sm border border-border" {...props}>
+      <code className="bg-muted px-1.5 py-0.5 rounded text-xs sm:text-sm border border-border" {...props}>
         {children}
       </code>
     )
@@ -52,14 +52,14 @@ const Avatar = ({ name, avatarUrl }: { name?: string | null; avatarUrl?: string 
       <img
         src={avatarUrl}
         alt={name || 'User'}
-        className="w-6 h-6 rounded-full object-cover border border-border"
+        className="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover border border-border"
       />
     )
   }
   
   return (
-    <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-medium">
-      <User className="h-3 w-3" />
+    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-medium">
+      <User className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
     </div>
   )
 }
@@ -192,51 +192,48 @@ export default function QuestionCard({ question, onQuestionUpdate, showBookmark 
     router.push(`/questions/${question.id}/edit`)
   }
 
-const handleDelete = async () => {
-  try {
-    setLoading(true)
-    await questionsApi.delete(question.id)
-    setIsDeleted(true)
-    setShowDeleteConfirm(false)
-    
-    
-  } catch (error) {
-    console.error('Failed to delete question:', error)
-    alert('Failed to delete question')
-    setLoading(false)
+  const handleDelete = async () => {
+    try {
+      setLoading(true)
+      await questionsApi.delete(question.id)
+      setIsDeleted(true)
+      setShowDeleteConfirm(false)
+    } catch (error) {
+      console.error('Failed to delete question:', error)
+      alert('Failed to delete question')
+      setLoading(false)
+    }
   }
-}
 
   // Bookmark toggle function
-const handleBookmark = async (e: React.MouseEvent) => {
-  e.stopPropagation()
-  
-  if (!user) {
-    router.push('/login')
-    return
-  }
+  const handleBookmark = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    
+    if (!user) {
+      router.push('/login')
+      return
+    }
 
-  try {
-    setBookmarkLoading(true)
-    
-    if (isBookmarked) {
-      await bookmarksApi.remove(question.id)
-      setIsBookmarked(false)
-    } else {
-      await bookmarksApi.add(question.id)
-      setIsBookmarked(true)
+    try {
+      setBookmarkLoading(true)
+      
+      if (isBookmarked) {
+        await bookmarksApi.remove(question.id)
+        setIsBookmarked(false)
+      } else {
+        await bookmarksApi.add(question.id)
+        setIsBookmarked(true)
+      }
+      
+      if (onQuestionUpdate) {
+        onQuestionUpdate()
+      }
+    } catch (error) {
+      console.error('Failed to toggle bookmark:', error)
+    } finally {
+      setBookmarkLoading(false)
     }
-    
-    // Only call update if explicitly needed, don't trigger full re-render
-    if (onQuestionUpdate) {
-    }
-  } catch (error) {
-    console.error('Failed to toggle bookmark:', error)
-    // Don't revert state on error to avoid flickering
-  } finally {
-    setBookmarkLoading(false)
   }
-}
 
   const toggleDropdown = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -249,34 +246,34 @@ const handleBookmark = async (e: React.MouseEvent) => {
 
   return (
     <>
-      <div className="card-hover p-6 border border-border rounded-lg bg-card transition-colors relative group">
+      <div className="card-hover p-4 sm:p-6 border border-border rounded-lg bg-card transition-colors relative group">
         {/* AI Summary Toggle Button */}
         <button
           onClick={generateAISummary}
-          className={`absolute -top-3 -left-3 p-2 rounded-full border transition-all z-10 ${
+          className={`absolute -top-2 -left-2 sm:-top-3 sm:-left-3 p-1.5 sm:p-2 rounded-full border transition-all z-10 ${
             showAIFeatures 
-              ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white border-purple-500 shadow-lg scale-110' 
+              ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white border-purple-500 shadow-lg scale-105 sm:scale-110' 
               : 'bg-card border-border text-muted-foreground hover:text-purple-600 hover:border-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20'
           }`}
           title={aiSummary ? 'Toggle AI Insights' : 'Generate AI Summary'}
           disabled={loadingAI}
         >
           {loadingAI ? (
-            <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent"></div>
+            <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-current border-t-transparent"></div>
           ) : showAIFeatures ? (
-            <Zap className="h-4 w-4" />
+            <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
           ) : (
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
           )}
         </button>
 
         {/* Action buttons - Bookmark + Dropdown */}
-        <div className="absolute top-4 right-4 flex gap-2">
+        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex gap-1 sm:gap-2">
           {/* Bookmark Button - Always visible */}
           {showBookmark && (
             <button
               onClick={handleBookmark}
-              className={`p-2 transition-colors rounded-md ${
+              className={`p-1.5 sm:p-2 transition-colors rounded-md ${
                 isBookmarked 
                   ? 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100 dark:bg-yellow-900/20 dark:hover:bg-yellow-900/30' 
                   : 'text-muted-foreground hover:text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
@@ -285,11 +282,11 @@ const handleBookmark = async (e: React.MouseEvent) => {
               disabled={bookmarkLoading}
             >
               {bookmarkLoading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-current"></div>
               ) : isBookmarked ? (
-                <BookmarkCheck className="h-4 w-4 fill-current" />
+                <BookmarkCheck className="h-3 w-3 sm:h-4 sm:w-4 fill-current" />
               ) : (
-                <Bookmark className="h-4 w-4" />
+                <Bookmark className="h-3 w-3 sm:h-4 sm:w-4" />
               )}
             </button>
           )}
@@ -299,20 +296,20 @@ const handleBookmark = async (e: React.MouseEvent) => {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={toggleDropdown}
-                className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent"
+                className="p-1.5 sm:p-2 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent"
                 title="More options"
               >
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
               
               {showDropdown && (
-                <div className="absolute right-0 top-full mt-1 w-32 bg-popover border border-border rounded-md shadow-lg z-20 animate-in fade-in-50">
+                <div className="absolute right-0 top-full mt-1 w-28 sm:w-32 bg-popover border border-border rounded-md shadow-lg z-20 animate-in fade-in-50">
                   <button
                     onClick={handleEdit}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent transition-colors rounded-t-md"
+                    className="w-full flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-accent transition-colors rounded-t-md"
                     disabled={loading}
                   >
-                    <Edit className="h-4 w-4" />
+                    <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
                     Edit
                   </button>
                   <button
@@ -320,10 +317,10 @@ const handleBookmark = async (e: React.MouseEvent) => {
                       setShowDeleteConfirm(true)
                       setShowDropdown(false)
                     }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors rounded-b-md"
+                    className="w-full flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors rounded-b-md"
                     disabled={loading}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                     Delete
                   </button>
                 </div>
@@ -334,16 +331,16 @@ const handleBookmark = async (e: React.MouseEvent) => {
 
         {/* AI Features Panel */}
         {showAIFeatures && (
-          <div className="mb-4 p-4 bg-gradient-to-r from-purple-500/5 to-blue-500/5 border border-purple-200 dark:border-purple-500/20 rounded-lg animate-in fade-in-50">
-            <div className="flex items-center gap-2 mb-3">
-              <Bot className="h-4 w-4 text-purple-500" />
-              <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">AI Insights</span>
+          <div className="mb-3 sm:mb-4 p-3 sm:p-4 bg-gradient-to-r from-purple-500/5 to-blue-500/5 border border-purple-200 dark:border-purple-500/20 rounded-lg animate-in fade-in-50">
+            <div className="flex items-center gap-2 mb-2 sm:mb-3">
+              <Bot className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500" />
+              <span className="text-xs sm:text-sm font-semibold text-purple-600 dark:text-purple-400">AI Insights</span>
             </div>
             
             {/* AI Summary */}
             {aiSummary && (
-              <div className="mb-3">
-                <p className="text-sm text-foreground leading-relaxed">{aiSummary}</p>
+              <div className="mb-2 sm:mb-3">
+                <p className="text-xs sm:text-sm text-foreground leading-relaxed">{aiSummary}</p>
               </div>
             )}
             
@@ -351,7 +348,7 @@ const handleBookmark = async (e: React.MouseEvent) => {
             {contentType && (
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs font-medium text-muted-foreground">Category:</span>
-                <span className="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs rounded-full capitalize">
+                <span className="px-2 py-0.5 sm:py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs rounded-full capitalize">
                   {contentType.toLowerCase()}
                 </span>
               </div>
@@ -359,9 +356,9 @@ const handleBookmark = async (e: React.MouseEvent) => {
             
             {/* Similar Questions */}
             {similarQuestions.length > 0 && (
-              <div className="mt-3">
+              <div className="mt-2 sm:mt-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <Brain className="h-3 w-3 text-blue-500" />
+                  <Brain className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-blue-500" />
                   <span className="text-xs font-medium text-muted-foreground">Related Topics:</span>
                 </div>
                 <div className="space-y-1">
@@ -376,11 +373,11 @@ const handleBookmark = async (e: React.MouseEvent) => {
           </div>
         )}
 
-        <div className="flex gap-4">
+        <div className="flex gap-3 sm:gap-4">
           <div className="flex-1 min-w-0">
-            {/* Fixed Title - Responsive and prevents overflow */}
+            {/* Title */}
             <h3 
-              className="font-semibold text-lg text-foreground mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer break-words overflow-hidden line-clamp-2 max-w-[calc(100%-80px)]"
+              className="font-semibold text-base sm:text-lg text-foreground mb-1 sm:mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer break-words overflow-hidden line-clamp-2"
               onClick={handleTitleClick}
               title={question.title}
             >
@@ -389,7 +386,7 @@ const handleBookmark = async (e: React.MouseEvent) => {
             
             {/* Markdown Body */}
             <div 
-              className="text-muted-foreground text-sm mb-3 line-clamp-2 cursor-pointer hover:text-foreground transition-colors prose prose-sm max-w-none dark:prose-invert"
+              className="text-muted-foreground text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2 cursor-pointer hover:text-foreground transition-colors prose prose-sm max-w-none dark:prose-invert"
               onClick={handleTitleClick}
             >
               <ReactMarkdown
@@ -405,43 +402,45 @@ const handleBookmark = async (e: React.MouseEvent) => {
                 <img 
                   src={question.image_url} 
                   alt="Question image" 
-                  className="max-w-full h-56 sm:h-64 md:h-72 object-cover rounded-lg border border-border cursor-pointer hover:opacity-90 transition-opacity"
+                  className="max-w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover rounded-lg border border-border cursor-pointer hover:opacity-90 transition-opacity"
                   onClick={handleTitleClick}
                 />
               </div>
             )}
             
+            {/* Tags */}
             {question.tags && question.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-3">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
                 {question.tags.map((tag) => (
-                  <span key={tag} className="flex items-center gap-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-2 py-1 rounded-full text-xs">
-                    <Hash className="h-3 w-3" />
+                  <span key={tag} className="flex items-center gap-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs">
+                    <Hash className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                     {tag}
                   </span>
                 ))}
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm text-muted-foreground">
-              <div className="flex items-center gap-3 flex-wrap">
+            {/* Footer */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                 <Avatar name={authorName} avatarUrl={question.avatar_url} />
                 
                 {questionAuthorId ? (
                   <Link 
                     href={`/profile/${questionAuthorId}`}
-                    className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors max-w-[120px] truncate"
+                    className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors max-w-[100px] sm:max-w-[120px] truncate text-xs sm:text-sm"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {authorName}
                   </Link>
                 ) : (
-                  <span className="font-medium text-foreground max-w-[120px] truncate">
+                  <span className="font-medium text-foreground max-w-[100px] sm:max-w-[120px] truncate text-xs sm:text-sm">
                     {authorName}
                   </span>
                 )}
                 
                 {isOwner && (
-                  <span className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-2 py-1 rounded-full shrink-0">
+                  <span className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full shrink-0">
                     You
                   </span>
                 )}
@@ -449,19 +448,19 @@ const handleBookmark = async (e: React.MouseEvent) => {
                 <span className="shrink-0">{formatTime(question.created_at)}</span>
               </div>
               
-              <div className="flex items-center gap-4 shrink-0">
+              <div className="flex items-center gap-3 sm:gap-4 shrink-0">
                 <div className="flex items-center gap-1">
-                  <MessageCircle className="h-4 w-4" />
-                  <span>{question.answers_count}</span>
+                  <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-xs sm:text-sm">{question.answers_count}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Eye className="h-4 w-4" />
-                  <span>{question.views_count}</span>
+                  <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-xs sm:text-sm">{question.views_count}</span>
                 </div>
                 {question.bookmarks_count > 0 && (
                   <div className="flex items-center gap-1">
-                    <Bookmark className="h-4 w-4" />
-                    <span>{question.bookmarks_count}</span>
+                    <Bookmark className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="text-xs sm:text-sm">{question.bookmarks_count}</span>
                   </div>
                 )}
               </div>

@@ -30,11 +30,11 @@ export function TrendingQuestions() {
   const fetchTrendingQuestions = async () => {
     try {
       setError(null)
-      console.log('🔄 Fetching trending questions...')
+      // console.log(' Fetching trending questions...')
       
       // Use your actual questions API
       const allQuestions = await questionsApi.getAll()
-      console.log('✅ RAW Questions API response:', allQuestions)
+      // console.log(' RAW Questions API response:', allQuestions)
       
       if (!allQuestions || !Array.isArray(allQuestions)) {
         throw new Error('Invalid questions response - not an array')
@@ -72,7 +72,7 @@ export function TrendingQuestions() {
         .sort((a: TrendingQuestion, b: TrendingQuestion) => b.views_count - a.views_count)
         .slice(0, 5)
       
-      console.log('📊 Final trending questions:', validQuestions)
+      // console.log('📊 Final trending questions:', validQuestions)
       setQuestions(validQuestions)
       
     } catch (error) {

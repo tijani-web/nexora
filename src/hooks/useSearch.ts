@@ -53,7 +53,7 @@ const search = async (query: string) => {
     console.log('🔍 Searching for:', query)
     
     const response = await searchApi.search(query) as any
-    console.log('✅ Search response:', response)
+    // console.log('✅ Search response:', response)
     
     // ✅ FIXED: Handle both response formats
     if (response.success && response.data) {
