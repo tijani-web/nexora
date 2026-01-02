@@ -19,8 +19,26 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Nexora - AI-Powered Knowledge Hub',
-  description: 'Connect, learn, and share insights with AI-enhanced discussions',
-}
+  description:
+    "A modern question-and-answer platform where users ask questions, share knowledge, vote on answers, and use AI assistance to write, summarize, and explore discussions.",
+  keywords: [
+    "Q&A platform",
+    "knowledge sharing",
+    "developer community",
+    "problem solving",
+    "questions and answers",
+    "AI assistance",
+    "discussion platform",
+    "voting system",
+    "accepted answers"
+  ],
+  authors: [{ name: "Nexora Team" }],
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
+};
+
 
 export default function RootLayout({
   children,

@@ -358,12 +358,13 @@ export default function ChatPage() {
               <MessageCircle className="h-4 w-4" />
             </Button>
             
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0">
+            {/* <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0">
               <Bot className="h-4 w-4 text-white" />
-            </div>
+            </div> */}
             
             <div className="min-w-0 flex-1">
-              <h1 className="font-semibold text-foreground truncate">Nexa AI Assistant</h1>
+              {/* <h1 className="font-semibold text-foreground truncate">Nexa AI Assist</h1> */}
+              <img src="/logo.png" alt="Nexora Logo" className="h-12 w-12 ml-2" />
               <p className="text-sm text-muted-foreground truncate">
                 {currentConversation 
                   ? `Chat started ${new Date(currentConversation.created_at).toLocaleDateString()}`
@@ -392,9 +393,10 @@ export default function ChatPage() {
           <div className="max-w-4xl mx-auto space-y-6">
             {messages.length === 0 ? (
               <div className="text-center py-8 lg:py-12">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center mx-auto mb-4">
+                {/* <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center mx-auto mb-4">
                   <Bot className="h-8 w-8 text-white" />
-                </div>
+                  
+                </div> */}
                 <h2 className="text-xl lg:text-2xl font-bold text-foreground mb-2">
                   Welcome to Nexa AI!
                 </h2>

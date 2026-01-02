@@ -11,8 +11,6 @@ interface ApiOptions extends RequestInit {
 async function apiClient<T = any>(endpoint: string, options: ApiOptions = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`
 
-  // console.log('🔄 API Call:', url, options)
-
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
 
   const config: RequestInit = {
@@ -30,14 +28,40 @@ async function apiClient<T = any>(endpoint: string, options: ApiOptions = {}): P
 
   try {
     const response = await fetch(url, config)
-    console.log('📡 API Response Status:', response.status)
+    console.log(' API Response Status:', response.status)
 
-    //  Only handle redirect if we're in the browser
+    // public endpoints that DON'T need auth
+    const publicEndpoints = [
+      '/auth/login',
+      '/auth/register',
+      '/questions/paginated',
+      '/questions',
+      '/questions/trending',
+      '/search',
+      '/users/public/list',
+      '/questions/'
+    ]
+
+    // Check if this is a public GET endpoint 
+    const isPublicEndpoint = publicEndpoints.some(publicEndpoint => 
+      endpoint.startsWith(publicEndpoint) && 
+      (config.method === 'GET' || config.method === undefined)
+    )
+
+    
     if (response.status === 401 && typeof window !== 'undefined') {
+      // Clear expired tokens regardless
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      window.location.href = '/login'
-      throw new Error('Token expired - redirected to login')
+
+      if (!isPublicEndpoint && token) {
+        console.log('Token expired, redirecting to login')
+        window.location.href = '/login'
+        throw new Error('Token expired - redirected to login')
+      }
+      
+      // If it's a public endpoint OR no token was sent, just let it fail
+      console.log('Public endpoint or no token, not redirecting')
     }
 
     if (!response.ok) {
@@ -46,7 +70,6 @@ async function apiClient<T = any>(endpoint: string, options: ApiOptions = {}): P
     }
 
     const data = await response.json()
-    // console.log('✅ API Response Data:', data)
     return data
   } catch (error: any) {
     console.error('❌ API Call Failed:', error)
