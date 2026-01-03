@@ -174,8 +174,7 @@ export default function UserProfilePage() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span>{((user.name || user.username)?.[0] || 'U').toUpperCase()}</span>
-              )}
+                <span>{((user.name || user.username)?.[0] || 'U').toUpperCase()}</span>              )}
             </div>
           </div>
 

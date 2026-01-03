@@ -10,7 +10,6 @@ import {
   PlusCircle, 
   TrendingUp, 
   User, 
-  Search,
   Menu,
   X,
   Info,
@@ -90,7 +89,7 @@ export default function MainLayout({
         </div>
       )}
       
-      {/* Main Content - FIXED: Only apply ml-64 on desktop when sidebar is open */}
+      {/* Main Content - FIXED: Removed Search button from tablet header */}
       <div className={`
         flex-1 flex flex-col min-w-0 w-full transition-all duration-200
         ${isDesktop && sidebarOpen ? 'ml-64' : 'ml-0'}
@@ -132,12 +131,7 @@ export default function MainLayout({
               <img src="/logo.png" alt="Nexora Logo" className="h-8 w-8" />
               
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => navigate('/search')}
-                  className="p-2 rounded-lg hover:bg-accent transition-colors"
-                >
-                  <Search className="h-5 w-5" />
-                </button>
+                {/* Removed Search button from tablet header */}
                 <NotificationBell />
                 <ThemeToggle />
               </div>
@@ -153,7 +147,7 @@ export default function MainLayout({
       {/* Right Sidebar - Desktop only when sidebar is open */}
       {isDesktop && sidebarOpen && !rightSidebarCollapsed && (
         <div className="fixed right-0 top-0 h-full w-80 bg-card border-l border-border z-20">
-          <div className="p-6 h-full overflow-y-auto">
+          <div className="p-6 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent hover:scrollbar-thumb-gray-600">
             <PopularTags />
           </div>
         </div>
@@ -235,7 +229,7 @@ function MobileBottomNav({ navigate }: { navigate: (href: string) => void }) {
   )
 }
 
-// Mobile Sidebar Menu Component
+// Mobile Sidebar Menu Component - Updated to remove "Full" from View Profile
 function MobileSidebarMenu({ 
   onClose, 
   navigate 
@@ -327,7 +321,7 @@ function MobileSidebarMenu({
               onClick={() => handleNavigation('/profile')}
               className="w-full p-3 rounded-lg bg-accent hover:bg-accent/80"
             >
-              View Full Profile
+              View Profile {/* Changed from View Full Profile */}
             </button>
             <button
               onClick={() => {

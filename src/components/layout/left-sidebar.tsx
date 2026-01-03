@@ -6,14 +6,10 @@ import {
   TrendingUp,
   PlusCircle,
   LogOut,
-  MessageCircle,
   User,
   Info,
   X,
-  Menu,
-  Sparkles,
-  Search,
-  ChevronLeft
+  Sparkles
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
@@ -27,12 +23,12 @@ interface LeftSidebarProps {
   onClose: () => void
 }
 
+// Removed Search item
 const navigationItems = [
   { icon: Home, label: 'Home', href: '/' },
   { icon: TrendingUp, label: 'Trending', href: '/trending' },
   { icon: Bookmark, label: 'Bookmarks', href: '/bookmarks' },
   { icon: User, label: 'Profile', href: '/profile' },
-  { icon: Search, label: 'Search', href: '/search' },
   { icon: Info, label: 'About', href: '/about' },
 ]
 
@@ -58,7 +54,7 @@ export function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar with custom scrollbar */}
       <aside className={`
         fixed left-0 top-0 z-50 h-full w-64 bg-card border-r border-border
         transition-transform duration-300 flex flex-col shadow-xl
@@ -66,7 +62,7 @@ export function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
         lg:translate-x-0 lg:z-30 lg:shadow-none
       `}>
         
-        {/* Header */}
+        {/* Header - Removed collapsible button on desktop */}
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="Nexora Logo" className="h-10 w-10" />
@@ -77,15 +73,6 @@ export function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
               <>
                 <NotificationBell />
                 <ThemeToggle />
-                {/* Desktop close button */}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onClose}
-                  className="h-8 w-8 hover:bg-accent"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </Button>
               </>
             ) : (
               // Mobile close button
@@ -101,30 +88,6 @@ export function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
           </div>
         </div>
 
-        {/* User Info - Show on mobile/tablet */}
-        {user && !isDesktop && (
-          <div className="p-4 border-b border-border bg-accent/30">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden">
-                {user.avatar_url ? (
-                  <img
-                    src={user.avatar_url}
-                    alt={user.username ?? 'User avatar'}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-white text-lg font-medium">
-                    {user?.username?.[0]?.toUpperCase() ?? 'U'}
-                  </span>
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium truncate text-foreground">{user.username}</p>
-                <p className="text-sm text-muted-foreground truncate">{user.email}</p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Ask Question Button */}
         <div className="p-4">
@@ -137,8 +100,8 @@ export function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
           </Button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4 overflow-y-auto">
+        {/* Navigation with custom scrollbar */}
+        <nav className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent hover:scrollbar-thumb-gray-600">
           <ul className="space-y-1">
             {navigationItems.map((item) => {
               const Icon = item.icon
@@ -179,12 +142,42 @@ export function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
         <div className="p-4 border-t border-border mt-auto">
           {user ? (
             <div className="space-y-3">
-              <Button
-                className="w-full bg-accent hover:bg-accent/80 text-foreground"
-                onClick={() => handleNavigation('/profile')}
-              >
-                View Full Profile
-              </Button>
+              {/* Only show on mobile/tablet, not on desktop */}
+              {!isDesktop && (
+                <Button
+                  className="w-full bg-accent hover:bg-accent/80 text-foreground"
+                  onClick={() => handleNavigation('/profile')}
+                >
+                  View Profile
+                </Button>
+              )}
+
+               {user && (
+          <div className="p-4 border-b border-border bg-accent/30">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden border-2 border-primary/20">
+                {user.avatar_url ? (
+                  <img
+                    src={user.avatar_url}
+                    alt={user.username ?? 'User avatar'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white text-lg font-medium">
+                    {user?.username?.[0]?.toUpperCase() ?? 'U'}
+                  </span>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium truncate text-foreground">{user.username}</p>
+                {!isDesktop && (
+                  <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+              
               <Button
                 className="w-full text-red-600 hover:bg-red-50"
                 variant="ghost"

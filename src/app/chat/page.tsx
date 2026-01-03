@@ -449,7 +449,7 @@ export default function ChatPage() {
                       <>
                         <AvatarImage src={user?.avatar_url} />
                         <AvatarFallback className="bg-blue-600 text-white text-xs">
-                          {user?.username[0].toUpperCase()}
+                          {user?.username?.[0]?.toUpperCase() || 'U'}
                         </AvatarFallback>
                       </>
                     ) : (

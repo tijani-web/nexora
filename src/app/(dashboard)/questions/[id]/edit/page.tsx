@@ -33,7 +33,6 @@ useEffect(() => {
       setFetching(true)
       const question = await questionsApi.getById(questionId)
       
-      // ✅ FIX: Check ownership using author_id (not user_id)
       if (question.author_id !== user?.id) {
         setError('You can only edit your own questions')
         return

@@ -381,7 +381,7 @@ export function HeroSearch() {
               key={example}
               variant="outline"
               size="sm"
-              className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 h-7"
+              className="text-xs text-muted-foreground bg-gray-900  hover:bg-blue-50 px-2 py-1 h-7"
               onClick={() => handleExampleClick(example)}
             >
               {example}
