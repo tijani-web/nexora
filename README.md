@@ -1,7 +1,7 @@
-# Nexura - AI-Powered Q&A Knowledge Hub
+# Nexora - AI-Powered Q&A Knowledge Hub
 
 ## Overview
-Nexura is a full-stack AI-enhanced question-and-answer platform designed to help users ask questions, receive answers from a community, and leverage AI assistance for enhanced content creation. Users can post questions, vote on answers, and accept solutions while AI features assist in generating titles, tags, and summaries.
+Nexora is a full-stack AI-enhanced question-and-answer platform designed to help users ask questions, receive answers from a community, and leverage AI assistance for enhanced content creation. Users can post questions, vote on answers, and accept solutions while AI features assist in generating titles, tags, and summaries.
 
 ## Features
 - Post and answer questions across multiple domains
